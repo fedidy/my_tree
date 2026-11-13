@@ -1,0 +1,8 @@
+*.out
+*.dSYM
+*.txt
+*.log
+*.DS_Store
+*.vs_code
+*.png
+*.html
