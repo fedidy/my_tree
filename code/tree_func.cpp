@@ -104,7 +104,7 @@ static void DumpNode(const tr_node *node, FILE *fp) {
     fprintf(fp, ")");
 }
 
-void TreeDump(const tr_node *tree_root, FILE* fp) {
+void TreeDump(const tr_node *tree_root, FILE *fp) {
     assert(tree_root); assert(fp);
 
     DumpNode(tree_root, fp);
@@ -113,4 +113,15 @@ void TreeDump(const tr_node *tree_root, FILE* fp) {
 }
 
 
-//int WriteTreeInFile(tr_node *tree_root, consst char* filename);
+int WriteTreeInFile(const tr_node *tree_root, const char* filename) {
+    assert(tree_root); assert(filename);
+
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL) {OUTPUT_ERROR("Can't open file %s\n", filename);}
+
+    TreeDump(tree_root, fp);
+
+    fclose(fp);
+
+    return 0;
+}

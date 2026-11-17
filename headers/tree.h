@@ -26,7 +26,7 @@ int TreeInsertRight(    tr_node *tree_node,         const tr_elem_t right_data, 
 #include <stdio.h>
 void TreeDump(          const tr_node *tree_root,   FILE* fp);
 
-int WriteTreeInFile(    tr_node *tree_root,         const char* filename);
+int WriteTreeInFile(    const tr_node *tree_root,         const char* filename);
 int ParseTreeFromFile(  tr_node *tree_root,         const char* filename);
 
 int TreeGenGraphTxt(    const tr_node *tree_root,   const char* filename);

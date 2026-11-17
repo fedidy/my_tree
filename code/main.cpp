@@ -15,4 +15,5 @@ int main() {
 
     TreeGenGraphPng(tree_root, "gra");
     TreeGenGraphSvg(tree_root, "ahah");
+    WriteTreeInFile(tree_root, "zvuk_daly.txt");
 }
