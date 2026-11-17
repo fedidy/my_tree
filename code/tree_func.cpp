@@ -153,3 +153,45 @@ int WriteTreeInFile(const tr_node *tree_root, const char* filename) {
 
     return 0;
 }
+
+
+static int ParseNodeFromFile(tr_node *node, FILE *fp) {
+    assert(node); assert(fp);
+
+    if (fscanf(fp, PRINT_ELEM, &node->data) == EOF) {OUTPUT_ERROR("Can't scan data: node->data = " PRINT_ELEM "\n", node->data);}
+
+    int brac = getc(fp);
+    if (brac == '(') {
+        node->left = (tr_node *) calloc(1, sizeof(tr_node));
+        if (ParseNodeFromFile(node->left, fp)) {return -1;}
+
+        brac = getc(fp);
+        if (brac == '(') {
+            node->right = (tr_node *) calloc(1, sizeof(tr_node));
+            if (ParseNodeFromFile(node->right, fp)) {return -1;}
+            brac = getc(fp);
+        }
+        if (brac != ')') {OUTPUT_ERROR("Got wrong symbol: %c\n", brac);}
+    } else {OUTPUT_ERROR("Got wrong symbol: %c\n", brac);}
+
+    return 0;
+}
+
+
+tr_node * ParseTreeFromFile(const char* filename) {
+    assert(filename);
+
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {fprintf(stderr, "Can't open file %s\n", filename); return NULL;}
+
+    tr_node *tree_root = (tr_node *) calloc(1, sizeof(tr_node));
+
+    if (ParseNodeFromFile(tree_root, fp)) {return NULL;}
+
+    return tree_root;
+}
+
+
+
+
+
