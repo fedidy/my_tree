@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "tree.h"
-#include "tree_graph.h"
 
 
 static void GenNode(const tr_node *node, FILE* gr_file) {
