@@ -12,4 +12,6 @@ int main() {
     TreeCmpAdd(tree_root, 100);
 
     TreeDump(tree_root, stdout);
+
+    TreeGenGraphPng(tree_root, "gra");
 }
