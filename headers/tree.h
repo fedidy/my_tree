@@ -31,6 +31,7 @@ int ParseTreeFromFile(  tr_node *tree_root,         const char* filename);
 
 int TreeGenGraphTxt(    const tr_node *tree_root,   const char* filename);
 int TreeGenGraphPng(    const tr_node *tree_root,   const char* filename);
+int TreeGenGraphSvg(    const tr_node *tree_root,   const char* filename);
 
 
 #endif

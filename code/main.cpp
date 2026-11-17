@@ -14,4 +14,5 @@ int main() {
     TreeDump(tree_root, stdout);
 
     TreeGenGraphPng(tree_root, "gra");
+    TreeGenGraphSvg(tree_root, "ahah");
 }

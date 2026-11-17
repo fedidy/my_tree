@@ -5,4 +5,5 @@
 *.DS_Store
 *.vs_code
 *.png
+*.svg
 *.html

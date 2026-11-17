@@ -79,3 +79,20 @@ int TreeGenGraphPng(const tr_node *tree_root, const char* filename) {
     }
     return 0;
 }
+
+
+int TreeGenGraphSvg(const tr_node *tree_root, const char* filename) {
+    assert(tree_root); assert(filename);
+
+    TreeGenGraphTxt(tree_root, filename);
+
+    size_t len = 2 * strlen(filename) + sizeof("dot -Tpng .txt -o .svg");
+    char* cmd = (char*) calloc(len, sizeof(char));
+    if (cmd == NULL) {OUTPUT_ERROR("Can't allocate cmd\n");}
+    snprintf(cmd, len, "dot -Tsvg %s.txt -o %s.svg\n", filename, filename);
+    if (system(cmd)) {
+        OUTPUT_ERROR("Can't create %s.svg\n", filename);
+    }
+    return 0;
+}
+
