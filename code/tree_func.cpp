@@ -90,6 +90,34 @@ int TreeInsertRight(tr_node *tree_node, const tr_elem_t right_data, const tr_ele
 }
 
 
+int TreeAddLeft(tr_node *tree_node, const tr_elem_t data) {
+    assert(tree_node);
+    if (tree_node->left != NULL) {OUTPUT_ERROR("Pointer to left node exists and equals %p\n", tree_node->left);}
+
+    tr_node *left_node = (tr_node *) calloc(1, sizeof(tr_node));
+
+    tree_node->left = left_node;
+    left_node->parent = tree_node;
+    left_node->data = data;
+
+    return 0;
+}
+
+int TreeAddRight(tr_node *tree_node, const tr_elem_t data) {
+    assert(tree_node);
+    if (tree_node->right != NULL) {OUTPUT_ERROR("Pointer to right node exists and equals %p\n", tree_node->right);}
+
+    tr_node *right_node = (tr_node *) calloc(1, sizeof(tr_node));
+
+    tree_node->right = right_node;
+    right_node->parent = tree_node;
+    right_node->data = data;
+
+    return 0;
+}
+
+
+
 static void DumpNode(const tr_node *node, FILE *fp) {
     assert(node); assert(fp);
 
