@@ -15,7 +15,7 @@ CC = g++
 
 CODE = 	code/main.cpp\
 		code/tree_func.cpp\
-		code/tree_dump.cpp
+		code/tree_graph.cpp
 
 NAME ?= tree
 

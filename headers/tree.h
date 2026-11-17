@@ -16,16 +16,21 @@ typedef struct _oliver_tree_node {
 fprintf(stderr, "%s:%d:" text, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__); return -1
 
 
-tr_node* TreeCtor(  const tr_elem_t root_data);
-void TreeDtor(      tr_node *tree_root);
+tr_node* TreeCtor(      const tr_elem_t root_data);
+void TreeDtor(          tr_node *tree_root);
 
-int TreeCmpAdd(     tr_node *tree_root, const tr_elem_t data);
-int TreeInsertLeft( tr_node *tree_node, const tr_elem_t left_data,  const tr_elem_t parent_data);
-int TreeInsertRight(tr_node *tree_node, const tr_elem_t right_data, const tr_elem_t parent_data);
+int TreeCmpAdd(         tr_node *tree_root,         const tr_elem_t data);
+int TreeInsertLeft(     tr_node *tree_node,         const tr_elem_t left_data,  const tr_elem_t parent_data);
+int TreeInsertRight(    tr_node *tree_node,         const tr_elem_t right_data, const tr_elem_t parent_data);
 
 #include <stdio.h>
-void TreeDump(      const tr_node *tree_root, FILE* fp);
-int WriteTreeInFile(tr_node *tree_root, const char* filename);
+void TreeDump(          const tr_node *tree_root,   FILE* fp);
+
+int WriteTreeInFile(    tr_node *tree_root,         const char* filename);
+int ParseTreeFromFile(  tr_node *tree_root,         const char* filename);
+
+int TreeGenGraphTxt(    const tr_node *tree_root,   const char* filename);
+int TreeGenGraphPng(    const tr_node *tree_root,   const char* filename);
 
 
 #endif
