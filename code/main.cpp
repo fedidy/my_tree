@@ -16,4 +16,8 @@ int main() {
     TreeGenGraphPng(tree_root, "gra");
     TreeGenGraphSvg(tree_root, "ahah");
     WriteTreeInFile(tree_root, "zvuk_daly.txt");
+
+    tr_node* new_tree = ParseTreeFromFile("zvuk_daly.txt");
+
+    TreeDump(new_tree, stdout);
 }

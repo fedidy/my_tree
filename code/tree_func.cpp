@@ -172,9 +172,10 @@ static int ParseNodeFromFile(tr_node *node, FILE *fp) {
             brac = getc(fp);
         }
         if (brac != ')') {OUTPUT_ERROR("Got wrong symbol: %c\n", brac);}
+        return 0;
+    } else if (brac == ')') {
+        return 0;
     } else {OUTPUT_ERROR("Got wrong symbol: %c\n", brac);}
-
-    return 0;
 }
 
 
@@ -185,6 +186,8 @@ tr_node * ParseTreeFromFile(const char* filename) {
     if (fp == NULL) {fprintf(stderr, "Can't open file %s\n", filename); return NULL;}
 
     tr_node *tree_root = (tr_node *) calloc(1, sizeof(tr_node));
+
+    getc(fp);
 
     if (ParseNodeFromFile(tree_root, fp)) {return NULL;}
 
