@@ -1,15 +1,11 @@
 #include "tree.h"
 
 int main() {
-    tr_node* tree_root = TreeCtor(10);
+    tr_node* tree_root = TreeCtor("sffsd");
 
     TreeDump(tree_root, stdout);
 
-    TreeInsertRight(tree_root, 15, tree_root->data);
-    TreeDump(tree_root, stdout);
-    TreeCmpAdd(tree_root, 5);
-    TreeCmpAdd(tree_root, 8);
-    TreeCmpAdd(tree_root, 100);
+    TreeInsertRight(tree_root, "fsf", "fsfsf");
 
     TreeDump(tree_root, stdout);
 
@@ -17,7 +13,8 @@ int main() {
     TreeGenGraphSvg(tree_root, "ahah");
     WriteTreeInFile(tree_root, "zvuk_daly.txt");
 
-    tr_node* new_tree = ParseTreeFromFile("zvuk_daly.txt");
+    tr_node* new_tree = ParseStrTreeFromFile("zvuk_daly.txt");
+    if (new_tree == NULL) {return -1;}
 
     TreeDump(new_tree, stdout);
 }

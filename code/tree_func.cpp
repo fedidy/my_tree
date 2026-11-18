@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "tree.h"
 
@@ -8,7 +9,7 @@
 tr_node* TreeCtor(const tr_elem_t root_data) {
     tr_node* tree_root = (tr_node *) calloc(1, sizeof(tr_node));
 
-    tree_root->data = root_data;
+    ASSIGN_DATA(tree_root, root_data);
 
     return tree_root;
 }
@@ -59,10 +60,10 @@ int TreeInsertLeft(tr_node *tree_node, const tr_elem_t left_data, const tr_elem_
     left_node->parent = tree_node;
     right_node->parent = tree_node;
 
-    left_node->data = left_data;
-    right_node->data = tree_node->data;
+    ASSIGN_DATA(left_node, left_data);
+    ASSIGN_DATA(right_node, tree_node->data);
 
-    tree_node->data = parent_data;
+    ASSIGN_DATA(tree_node, parent_data);
 
     return 0;
 }
@@ -81,10 +82,10 @@ int TreeInsertRight(tr_node *tree_node, const tr_elem_t right_data, const tr_ele
     left_node->parent = tree_node;
     right_node->parent = tree_node;
 
-    left_node->data = tree_node->data;
-    right_node->data = right_data;
+    ASSIGN_DATA(left_node, tree_node->data);
+    ASSIGN_DATA(right_node, right_data);
 
-    tree_node->data = parent_data;
+    ASSIGN_DATA(tree_node, parent_data);
 
     return 0;
 }
@@ -98,7 +99,7 @@ int TreeAddLeft(tr_node *tree_node, const tr_elem_t data) {
 
     tree_node->left = left_node;
     left_node->parent = tree_node;
-    left_node->data = data;
+    ASSIGN_DATA(left_node, data);
 
     return 0;
 }
@@ -111,7 +112,7 @@ int TreeAddRight(tr_node *tree_node, const tr_elem_t data) {
 
     tree_node->right = right_node;
     right_node->parent = tree_node;
-    right_node->data = data;
+    ASSIGN_DATA(right_node, data);
 
     return 0;
 }
@@ -155,20 +156,22 @@ int WriteTreeInFile(const tr_node *tree_root, const char* filename) {
 }
 
 
-static int ParseNodeFromFile(tr_node *node, FILE *fp) {
+static int ParseNumNodeFromFile(tr_node *node, FILE *fp) {
     assert(node); assert(fp);
 
-    if (fscanf(fp, PRINT_ELEM, &node->data) == EOF) {OUTPUT_ERROR("Can't scan data: node->data = " PRINT_ELEM "\n", node->data);}
+    if (fscanf(fp, PRINT_ELEM, node->data) == EOF) {
+        OUTPUT_ERROR("Can't scan data: node->data = " PRINT_ELEM "\n", node->data);
+    }
 
     int brac = getc(fp);
     if (brac == '(') {
         node->left = (tr_node *) calloc(1, sizeof(tr_node));
-        if (ParseNodeFromFile(node->left, fp)) {return -1;}
+        if (ParseNumNodeFromFile(node->left, fp)) {return -1;}
 
         brac = getc(fp);
         if (brac == '(') {
             node->right = (tr_node *) calloc(1, sizeof(tr_node));
-            if (ParseNodeFromFile(node->right, fp)) {return -1;}
+            if (ParseNumNodeFromFile(node->right, fp)) {return -1;}
             brac = getc(fp);
         }
         if (brac != ')') {OUTPUT_ERROR("Got wrong symbol: %c\n", brac);}
@@ -179,7 +182,7 @@ static int ParseNodeFromFile(tr_node *node, FILE *fp) {
 }
 
 
-tr_node * ParseTreeFromFile(const char* filename) {
+tr_node * ParseNumTreeFromFile(const char* filename) {
     assert(filename);
 
     FILE *fp = fopen(filename, "r");
@@ -189,7 +192,58 @@ tr_node * ParseTreeFromFile(const char* filename) {
 
     getc(fp);
 
-    if (ParseNodeFromFile(tree_root, fp)) {return NULL;}
+    if (ParseNumNodeFromFile(tree_root, fp)) {return NULL;}
+
+    return tree_root;
+}
+
+
+#include <ctype.h>
+static int ParseStrNodeFromFile(tr_node *node, FILE *fp) {
+    assert(node); assert(fp);
+
+    int symb = 0;
+    int i = 0;
+    while (i < MAX_DATA_LENGTH - 1) {
+        symb = getc(fp);
+        if (symb == '(' || symb == ')') {
+            break;
+        }
+        if (!isalpha(symb)) {OUTPUT_ERROR("Got wrong symbol with code: %d\n", symb);}
+        node->data[i] = (char) symb;
+        i++;
+    }
+
+    if (symb == '(') {
+        node->left = (tr_node *) calloc(1, sizeof(tr_node));
+        if (ParseStrNodeFromFile(node->left, fp)) {return -1;}
+
+        symb = getc(fp);
+        if (symb == '(') {
+            node->right = (tr_node *) calloc(1, sizeof(tr_node));
+            if (ParseStrNodeFromFile(node->right, fp)) {return -1;}
+            symb = getc(fp);
+        }
+        if (symb != ')') {OUTPUT_ERROR("Got wrong symbol: %c\n", symb);}
+        return 0;
+    } else {
+        assert(symb == ')');
+        return 0;
+    }
+}
+
+
+tr_node * ParseStrTreeFromFile(const char* filename) {
+    assert(filename);
+
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {fprintf(stderr, "Can't open file %s\n", filename); return NULL;}
+
+    tr_node *tree_root = (tr_node *) calloc(1, sizeof(tr_node));
+
+    getc(fp);
+
+    if (ParseStrNodeFromFile(tree_root, fp)) {return NULL;}
 
     return tree_root;
 }
