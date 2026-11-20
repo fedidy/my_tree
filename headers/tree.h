@@ -1,15 +1,15 @@
 #ifndef TREE_H
 #define TREE_H
 
-typedef const char* tr_elem_t;
+#define MAX_DATA_LENGTH 128
+typedef char tr_elem_t[MAX_DATA_LENGTH];
 #define PRINT_ELEM "%s"
-const int MAX_DATA_LENGTH = 128;
 
 //#define ASSIGN_DATA(node, new_data) (node)->data = (new_data)
 #define ASSIGN_DATA(node, new_data) strcpy((node)->data, (new_data))
 
 typedef struct _oliver_tree_node {
-    char data[MAX_DATA_LENGTH];
+    tr_elem_t data;
     _oliver_tree_node *left;
     _oliver_tree_node *right;
     _oliver_tree_node *parent;
