@@ -204,12 +204,12 @@ static int ParseStrNodeFromFile(tr_node *node, FILE *fp) {
 
     int symb = 0;
     int i = 0;
-    while (i < MAX_DATA_LENGTH - 1) {
+    while (i < (MAX_DATA_LENGTH - 1)) {
         symb = getc(fp);
         if (symb == '(' || symb == ')') {
             break;
         }
-        if (!isalpha(symb)) {OUTPUT_ERROR("Got wrong symbol with code: %d\n", symb);}
+        if (!isalpha(symb) && symb != '_') { OUTPUT_ERROR("Got wrong symbol with code: %d\n", symb); }
         node->data[i] = (char) symb;
         i++;
     }
@@ -233,6 +233,19 @@ static int ParseStrNodeFromFile(tr_node *node, FILE *fp) {
 }
 
 
+static void GenParents(tr_node *node, tr_node *parent) {
+    assert(node);
+
+    node->parent = parent;
+
+    if (node->left) {
+        GenParents(node->left, node);
+    }
+    if (node->right) {
+        GenParents(node->right, node);
+    }
+}
+
 tr_node * ParseStrTreeFromFile(const char* filename) {
     assert(filename);
 
@@ -245,10 +258,7 @@ tr_node * ParseStrTreeFromFile(const char* filename) {
 
     if (ParseStrNodeFromFile(tree_root, fp)) {return NULL;}
 
+    GenParents(tree_root, 0);
+
     return tree_root;
 }
-
-
-
-
-
