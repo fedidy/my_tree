@@ -15,7 +15,8 @@ CC = g++
 
 CODE = 	code/main.cpp\
 		code/tree_func.cpp\
-		code/tree_graph.cpp
+		code/tree_graph.cpp\
+		code/akinator.cpp
 
 NAME ?= tree
 

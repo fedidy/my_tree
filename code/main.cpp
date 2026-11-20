@@ -1,6 +1,8 @@
 #include "tree.h"
+#include "akinator.h"
 
 int main() {
+    /*
     tr_node* tree_root = TreeCtor("sffsd");
 
     TreeDump(tree_root, stdout);
@@ -17,4 +19,11 @@ int main() {
     if (new_tree == NULL) {return -1;}
 
     TreeDump(new_tree, stdout);
+    */
+    StartAkinator("akinator.txt");
+
+    tr_node* new_tree = ParseStrTreeFromFile("akinator.txt");
+    if (new_tree == NULL) {return -1;}
+
+    TreeGenGraphSvg(new_tree, "aki");
 }
