@@ -20,6 +20,11 @@ int main() {
 
     TreeDump(new_tree, stdout);
     */
+
+    tr_node* old_tree = ParseStrTreeFromFile("akinator.txt");
+    if (old_tree == NULL) {return -1;}
+    TreeGenGraphSvg(old_tree, "aki_old");
+
     StartAkinator("akinator.txt");
 
     tr_node* new_tree = ParseStrTreeFromFile("akinator.txt");

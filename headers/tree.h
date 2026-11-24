@@ -4,6 +4,7 @@
 #define MAX_DATA_LENGTH 128
 typedef char tr_elem_t[MAX_DATA_LENGTH];
 #define PRINT_ELEM "%s"
+#define SCAN_ELEM "%[^()\n]"
 
 //#define ASSIGN_DATA(node, new_data) (node)->data = (new_data)
 #define ASSIGN_DATA(node, new_data) strcpy((node)->data, (new_data))

@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "tree.h"
 
@@ -122,14 +123,13 @@ int TreeAddRight(tr_node *tree_node, const tr_elem_t data) {
 static void DumpNode(const tr_node *node, FILE *fp) {
     assert(node); assert(fp);
 
-    if (node->left == NULL || node->right == NULL) {
-        fprintf(fp, "(" PRINT_ELEM ")", node->data);
-        return;
-    }
-
     fprintf(fp, "(" PRINT_ELEM, node->data);
-    DumpNode(node->left, fp);
-    DumpNode(node->right, fp);
+    if (node->left != NULL) {
+        DumpNode(node->left, fp);
+    }
+    if (node->right != NULL) {
+        DumpNode(node->right, fp);
+    }
     fprintf(fp, ")");
 }
 
@@ -198,11 +198,16 @@ tr_node * ParseNumTreeFromFile(const char* filename) {
 }
 
 
-#include <ctype.h>
 static int ParseStrNodeFromFile(tr_node *node, FILE *fp) {
     assert(node); assert(fp);
 
-    int symb = 0;
+    if (!fscanf(fp, SCAN_ELEM, node->data)) {
+        if ((node->parent)->left == node) { (node->parent)->left = NULL; }
+        else { (node->parent)->right = NULL; }
+        free(node);
+    }
+
+    /*
     int i = 0;
     while (i < (MAX_DATA_LENGTH - 1)) {
         symb = getc(fp);
@@ -213,26 +218,32 @@ static int ParseStrNodeFromFile(tr_node *node, FILE *fp) {
         node->data[i] = (char) symb;
         i++;
     }
+    */
+
+    int symb = fgetc(fp);
 
     if (symb == '(') {
         node->left = (tr_node *) calloc(1, sizeof(tr_node));
+        (node->left)->parent = node;
         if (ParseStrNodeFromFile(node->left, fp)) {return -1;}
 
         symb = getc(fp);
         if (symb == '(') {
             node->right = (tr_node *) calloc(1, sizeof(tr_node));
+            (node->right)->parent = node;
             if (ParseStrNodeFromFile(node->right, fp)) {return -1;}
             symb = getc(fp);
         }
         if (symb != ')') {OUTPUT_ERROR("Got wrong symbol: %c\n", symb);}
         return 0;
     } else {
-        assert(symb == ')');
+        if (symb != ')') {OUTPUT_ERROR("Got wrong symbol: %c\n", symb);}
         return 0;
     }
 }
 
 
+/*
 static void GenParents(tr_node *node, tr_node *parent) {
     assert(node);
 
@@ -245,6 +256,8 @@ static void GenParents(tr_node *node, tr_node *parent) {
         GenParents(node->right, node);
     }
 }
+*/
+
 
 tr_node * ParseStrTreeFromFile(const char* filename) {
     assert(filename);
@@ -254,11 +267,15 @@ tr_node * ParseStrTreeFromFile(const char* filename) {
 
     tr_node *tree_root = (tr_node *) calloc(1, sizeof(tr_node));
 
-    getc(fp);
+    int first_el = fgetc(fp);
+    if (first_el != '(') {
+        fprintf(stderr, "Got wrong symbol with code: %d", first_el);
+        return NULL;
+    }
 
     if (ParseStrNodeFromFile(tree_root, fp)) {return NULL;}
 
-    GenParents(tree_root, 0);
+    //GenParents(tree_root, 0);
 
     return tree_root;
 }
