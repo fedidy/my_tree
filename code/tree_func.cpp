@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+
 
 #include "tree.h"
 
@@ -206,19 +206,6 @@ static int ParseStrNodeFromFile(tr_node *node, FILE *fp) {
         else { (node->parent)->right = NULL; }
         free(node);
     }
-
-    /*
-    int i = 0;
-    while (i < (MAX_DATA_LENGTH - 1)) {
-        symb = getc(fp);
-        if (symb == '(' || symb == ')') {
-            break;
-        }
-        if (!isalpha(symb) && symb != '_') { OUTPUT_ERROR("Got wrong symbol with code: %d\n", symb); }
-        node->data[i] = (char) symb;
-        i++;
-    }
-    */
 
     int symb = fgetc(fp);
 
